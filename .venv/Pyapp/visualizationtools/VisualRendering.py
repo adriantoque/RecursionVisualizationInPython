@@ -17,8 +17,27 @@ class GraphicsView(QGraphicsView):
             self.scale(zoom_in_factor, zoom_in_factor)
         else:
             self.scale(zoom_out_factor, zoom_out_factor)
+            
+def add_up_arrow(scene, start: QPointF, end: QPointF):
+    # Draw the line (stop slightly before the tip so the arrowhead sits cleanly)
+    line = QGraphicsLineItem(start.x(), start.y(), end.x(), end.y() )
+    line.setPen(QPen(Qt.GlobalColor.black, 2))
+    scene.addItem(line)
+
+    arrow_size = 10
+
+    # Arrowhead points (pointing UP)
+    p1 = end + QPointF(-arrow_size / 2, arrow_size)   # bottom-left of tip
+    p2 = end + QPointF( arrow_size / 2, arrow_size)   # bottom-right of tip
+
+    arrow_head = QPolygonF([end, p1, p2])
+    arrow_item = QGraphicsPolygonItem(arrow_head)
+    arrow_item.setBrush(QBrush(Qt.GlobalColor.black))
+    scene.addItem(arrow_item)
+
+    return line, arrow_item
        
-def add_arrow(scene, start: QPointF, end: QPointF):
+def add_down_arrow(scene, start: QPointF, end: QPointF):
     # Draw the line
     line = QGraphicsLineItem(start.x(), start.y(), end.x(), end.y()-11)
     line.setPen(QPen(Qt.GlobalColor.black, 2))
@@ -35,8 +54,25 @@ def add_arrow(scene, start: QPointF, end: QPointF):
     arrow_item = QGraphicsPolygonItem(arrow_head)
     arrow_item.setBrush(QBrush(Qt.GlobalColor.black))
     scene.addItem(arrow_item)
-
     return line, arrow_item
+
+def add_horizontal_arrow(scene, start: QPointF, end: QPointF):
+    # Draw the line (straight left-to-right)
+    line = QGraphicsLineItem(start.x(), start.y(), end.x() - 11, end.y())
+    line.setPen(QPen(Qt.GlobalColor.black, 2))
+    scene.addItem(line)
+
+    # Arrowhead size
+    arrow_size = 10
+
+    # Arrowhead points (triangle pointing right)
+    p1 = end + QPointF(-arrow_size, -arrow_size / 2)  # upper left
+    p2 = end + QPointF(-arrow_size,  arrow_size / 2)  # lower left
+
+    arrow_head = QPolygonF([end, p1, p2])
+    arrow_item = QGraphicsPolygonItem(arrow_head)
+    arrow_item.setBrush(QBrush(Qt.GlobalColor.black))
+    scene.addItem(arrow_item)
      
 class BaseVisualNode(QGraphicsObject):
     def __init__(self, text, width, height):
@@ -199,9 +235,8 @@ class NodeRenderer():
                     line.setPen(QPen(Qt.GlobalColor.black, 2))
                     line.setZValue(-1)
                     self.scene.addItem(line)
-                prev = n     
+                prev = n          
         
-    
     def setData(self, dl):
         self.dataList = dl
         
@@ -213,43 +248,68 @@ class NodeRenderer():
         for node in self.dataList:
             self.nodes.append(VisualRectNode(str(node), 100, 20))
             
-        self.nodes.reverse()
         for n in self.nodes:
             n.setPos(QPointF(cX, cY))
             self.scene.addItem(n)
             cY -= n.boundingRect().height() + 5
-                
     def linked_render(self):
         self.scene.clear()
         cX = 0
         cY = 0
         self.nodes = []
+
+        # Build nodes
         for node in self.dataList:
-            self.nodes.append(VisualNodes(str(node), 50))
-        
+            self.nodes.append(BaseVisualNode(str(node), 50, 50))
+
         prev_node = None
         for n in self.nodes:
+            # Place node
             n.setPos(QPointF(cX, cY))
             self.scene.addItem(n)
+
+            # If there is a previous node, draw an arrow from it to this one
+            if prev_node is not None:
+                start = prev_node.pos() + QPointF(prev_node.boundingRect().width(), prev_node.boundingRect().height() / 2)
+                end   = n.pos() + QPointF(0, n.boundingRect().height() / 2)
+                add_horizontal_arrow(self.scene, start, end)
+
+            # Advance X for next node
             cX += n.boundingRect().width() + 20
-        self.createLine(0)
+            prev_node = n
     
     def stack_Linkedlist_render(self):
         self.scene.clear()
+        self.nodes.clear()
+
         cX = 0
         cY = 0
-        for node in self.dataList:
-            self.nodes.append(VisualRectNode(str(node), 100, 20))
-        
+        spacing = 20  # vertical spacing between nodes
+
+        # Build visual nodes from data
+        for value in self.dataList:
+            self.nodes.append(VisualRectNode(str(value), 100, 20))
+
+        # Top of stack should be the last rendered (higher up visually)
+        self.nodes.reverse()
+
+        prev = None
         for n in self.nodes:
+            # Place current node
             n.setPos(QPointF(cX, cY))
             self.scene.addItem(n)
-            cY -= n.boundingRect().height() + 5
-            
-        self.createLine(1)
-    
+
+            # If there is a previous node, draw an arrow up from it to this one
+            if prev is not None:
+                start = prev.pos() + QPointF(prev.boundingRect().width() / 2, 0)  # top center of previous
+                end   = n.pos()   + QPointF(n.boundingRect().width() / 2, n.boundingRect().height())  # bottom center of current
+                add_up_arrow(self.scene, start, end)
+
+            # Move Y upward for next node
+            cY -= n.boundingRect().height() + spacing
+            prev = n
     # direct recursion
-    
+        
     def tailRecursion_renderer(self, n, accumulator=0):
         # clear the scene once at the start
         if accumulator == 0:
@@ -263,14 +323,14 @@ class NodeRenderer():
             prev = self.nodes[-1]
             start = prev.pos() + QPointF(prev.width / 2, prev.height)
             end   = node.pos() + QPointF(node.width /2, 0)
-            add_arrow(self.scene, start, end)
+            add_down_arrow(self.scene, start, end)
 
         self.nodes.append(node)
 
         if n == 0: 
             if self.nodes:
-                self.nodes[0].set_marker("HEAD")
-                self.nodes[-1].set_marker("TAIL")
+                self.nodes[0].set_marker("START")
+                self.nodes[-1].set_marker("END")
 
             return self.nodes  # return the list of created nodes
 
@@ -288,21 +348,22 @@ class NodeRenderer():
 
         # work happens after recursion 
         node = BaseVisualNode(str(accumulator), 50, 50)
-        node.setPos(QPointF(0, len(self.nodes) * 50))
+        node.setPos(QPointF(0, len(self.nodes) * 70))
         self.scene.addItem(node)
+        if self.nodes:
+            prev = self.nodes[-1]
+            start = prev.pos() + QPointF(prev.width / 2, prev.height)
+            end   = node.pos() + QPointF(node.width /2, 0)
+            add_down_arrow(self.scene, start, end)
         self.nodes.append(node)
 
         # mark head and tail after all nodes are added
         if accumulator == 0 and self.nodes:
-            self.nodes[0].set_marker("HEAD")
-            self.nodes[-1].set_marker("TAIL")
+            self.nodes[0].set_marker("START")
+            self.nodes[-1].set_marker("END")
         
     def treeRecursion_renderer(self, n, depth=0, x=0, y=0, offset=100):
-        # Render a binary tree recursively.
-        # n      : depth of recursion (number of levels)
-        # depth  : current depth
-        # x, y   : position of current node
-        # offset : horizontal spacing between branches
+        
         if n <= 0: return None
         # --- create the node ---
         node = BaseVisualNode(str(depth), 50, 50)
@@ -331,9 +392,9 @@ class NodeRenderer():
         )
         # --- draw arrows to children ---
         if left:
-            add_arrow(self.scene, node.pos() + QPointF(node.width / 2, node.height), left.pos() + QPointF(left.width / 2, 0))
+            add_down_arrow(self.scene, node.pos() + QPointF(node.width / 2, node.height), left.pos() + QPointF(left.width / 2, 0))
         if right:
-            add_arrow(self.scene, node.pos() + QPointF(node.width / 2, node.height), right.pos() + QPointF(right.width / 2, 0))
+            add_down_arrow(self.scene, node.pos() + QPointF(node.width / 2, node.height), right.pos() + QPointF(right.width / 2, 0))
 
         return node
     
@@ -354,7 +415,7 @@ class NodeRenderer():
 
         if inner:
             # use your global add_arrow function
-            add_arrow(self.scene, node.pos() + QPointF(node.width/2, node.height),
+            add_down_arrow(self.scene, node.pos() + QPointF(node.width/2, node.height),
                                 inner.pos() + QPointF(inner.width/2, 0))
 
             # simulate "nested_example(inner_value - 1)"
@@ -363,7 +424,7 @@ class NodeRenderer():
             outer = self.nestedRecursion_renderer(next_val, x + 80, y + 80, depth + 1)
 
             if outer:
-                add_arrow(self.scene, node.pos() + QPointF(node.width/2, node.height),
+                add_down_arrow(self.scene, node.pos() + QPointF(node.width/2, node.height),
                                     outer.pos() + QPointF(outer.width/2, 0))
 
         return node
@@ -378,7 +439,7 @@ def indirectRecursion_renderer_A(n, renderer, x=0, y=0):
     # call B
     b_node = indirectRecursion_renderer_B(n - 1, renderer, x - 100, y + 80)
     if b_node:
-        add_arrow(renderer.scene, node.pos() + QPointF(node.width/2, node.height),
+        add_down_arrow(renderer.scene, node.pos() + QPointF(node.width/2, node.height),
                                 b_node.pos() + QPointF(b_node.width/2, 0))
     return node
 def indirectRecursion_renderer_B(n, renderer, x=0, y=0):
@@ -391,7 +452,7 @@ def indirectRecursion_renderer_B(n, renderer, x=0, y=0):
     # call A
     a_node = indirectRecursion_renderer_A(n - 1, renderer, x + 100, y + 80)
     if a_node:
-        add_arrow(renderer.scene, node.pos() + QPointF(node.width/2, node.height),
+        add_down_arrow(renderer.scene, node.pos() + QPointF(node.width/2, node.height),
                                 a_node.pos() + QPointF(a_node.width/2, 0))
     return node
 def indirectRecursion_renderer(n, renderer):

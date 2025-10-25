@@ -43,8 +43,6 @@ class MainWindow(QWidget):
             QPushButton("Random nodes")]
         
         self.linkedlist_buttons = [
-            QPushButton("Tail Recursive"),
-            QPushButton("Iterative Traverse (Use Stack)"),
             QPushButton("Recursive Reverse"),
             QPushButton("Clear Linked List")]
         
@@ -182,7 +180,7 @@ class MainWindow(QWidget):
                                         QLabel {
                                             color: white;
                                         }
-                                        QTextEdit {
+                                        QLineEdit {
                                             background-color: #5c4db3;
                                             color: white;
                                             border-radius: 8px;
@@ -196,18 +194,25 @@ class MainWindow(QWidget):
                                         }
                                         """)
         self.uLayout = QVBoxLayout(self.uSection)
+        self.uLineTextEdit = QLineEdit("3")
         self.recursion_buttons = [
-            QPushButton("Tail && Head Recursion"),
+            QPushButton("Tail Recursion"),
+            QPushButton("Head Recursion"),
             QPushButton("Tree Recursion"),
             QPushButton("Nested Recursion")
         ]
+        self.uLayout.addWidget(QLabel("Recursion Visualization Area"))
+        self.uLayout.addWidget(self.uLineTextEdit)
+        for button in self.recursion_buttons:
+            self.uLayout.addWidget(button)
+        
         self.uInputSection = QWidget()
         self.uInputSection.hide()
         self.uInputSection.setStyleSheet("""
                                             QLabel {
                                                 color: white;
                                             }
-                                            QTextEdit {
+                                            QTextEdit {x
                                                 background-color: #5c4db3;
                                                 color: white;
                                                 border-radius: 8px;
@@ -240,6 +245,8 @@ class MainWindow(QWidget):
             
         
         self.initUI()
+
+
 
     def initUI(self):
         # scene.setSceneRect(-400, -700, 1600, 1200)
@@ -295,7 +302,10 @@ class MainWindow(QWidget):
             self._update_log_and_visual_for_linkedlist(self.scene)
             self.log_area.append("LinkedList cleared.")
 
-        
+        def on_reverse_linked_list():
+            self.linkedlist.recursive_reverse()
+            self._update_log_and_visual_for_linkedlist(self.scene)
+            self.log_area.append("LinkedList reversed recursively.")
 
         # ---------------- Stack Operations ---------------- #
 
@@ -381,9 +391,6 @@ class MainWindow(QWidget):
 
         # Recursion Operations
         
-        self.uLayout.addWidget(QLabel("Recursion Visualization Area"))
-        for button in self.recursion_buttons:
-            self.uLayout.addWidget(button)
         
         
         def show_Input_TailHeadRecursion():
@@ -407,30 +414,31 @@ class MainWindow(QWidget):
                     
         def on_run_tail_recursion():
             accumulator = 0
-            count = int(self.recursionCount.text()) - 1
+            count = int(self.uLineTextEdit.text()) - 1
             nodeRender = NodeRenderer(self.scene)
             nodeRender.tailRecursion_renderer(count, accumulator)
         def on_run_head_recursion():
             accumulator = 0
-            count = int(self.recursionCount.text())
+            count = int(self.uLineTextEdit.text())
             nodeRender = NodeRenderer(self.scene)
             nodeRender.headRecursion_renderer(count, accumulator)
         def on_run_tree_recursion():
-            depth = int(self.recursionCount.text())
+            self.scene.clear()
+            depth = int(self.uLineTextEdit.text())
             nodeRender = NodeRenderer(self.scene)
-            nodeRender.treeRecursion_renderer(depth, 0, 0, 0, 100)
+            nodeRender.treeRecursion_renderer(depth, 0, 0, 0, 200)
         def on_run_nested_recursion():
+            self.scene.clear()
+            count = int(self.uLineTextEdit.text())
             nodeRenderer = NodeRenderer(self.scene)
-            nodeRenderer.nestedRecursion_renderer(1)
-        def on_nested_recursion():
-            nodeRenderer = NodeRenderer(self.scene)
-            nodeRenderer.nestedRecursion_renderer(4)
+            nodeRenderer.nestedRecursion_renderer(count)
             
         # CONNECTING CLICK ON BUTTONS
         self.node_buttons[0].clicked.connect(on_append)
         self.node_buttons[1].clicked.connect(on_prepend)
         self.node_buttons[2].clicked.connect(on_random)
-        self.linkedlist_buttons[3].clicked.connect(on_clear_linked_list)
+        self.linkedlist_buttons[0].clicked.connect(on_reverse_linked_list)
+        self.linkedlist_buttons[1].clicked.connect(on_clear_linked_list)
         self.stackA_buttons[0].clicked.connect(on_push_stack)
         self.stackA_buttons[1].clicked.connect(on_pop_stack)
         clear_stackA_button.clicked.connect(on_clear_stack)
@@ -440,11 +448,11 @@ class MainWindow(QWidget):
         refresh_visual_button.clicked.connect(on_refresh_visualization)
         
         
-        self.recursion_buttons[0].clicked.connect(show_Input_TailHeadRecursion)
-        self.tailButtons[0].clicked.connect(on_nested_recursion)
-        self.tailButtons[1].clicked.connect(on_run_head_recursion)
+        self.recursion_buttons[0].clicked.connect(on_run_tail_recursion)
+        self.recursion_buttons[1].clicked.connect(on_run_head_recursion)
+        self.recursion_buttons[2].clicked.connect(on_run_tree_recursion)
+        self.recursion_buttons[3].clicked.connect(on_run_nested_recursion)
         
-      
         # ---------------- Visualization & Logs ---------------- #
         view_area_layout = QHBoxLayout()
        
@@ -462,28 +470,34 @@ class MainWindow(QWidget):
        
         # show and hide sections
         def toggle_linkedlist_ui():
+            self.scene.clear()
             # show linkedlist ui
             show_section(self.section_container_A)
             print("linkedlist")
             
         def toggle_stack_ui():
+            self.scene.clear()
             # show stack ui
             show_section(self.section_container_B)
             print("stack")    
             
         def toggle_stacklinkedlist_ui():
+            self.scene.clear()
             # show stack built in linkedlist ui
             show_section(self.section_container_C)
             print("stack linkedlist")
         
         def toggle_Recursion_ui():
-            show_section(self.uSection) 
+            self.scene.clear()
+            print("addad")
+            show_section(self.uSection)
         
         def show_section(section):
             # Hide all
             self.section_container_A.hide()
             self.section_container_B.hide()
             self.section_container_C.hide()
+            self.uSection.hide()
 
             # Show the one requested
             section.show()
