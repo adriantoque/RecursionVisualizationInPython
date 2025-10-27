@@ -79,6 +79,8 @@ class BaseVisualNode(QGraphicsObject):
         super().__init__()
         self.width = width
         self.height = height
+        self.color = QColor("cyan")
+        self.setAcceptHoverEvents(True)
         self.setTransformOriginPoint(width/2, height/2)
         self.setFlag(QGraphicsObject.GraphicsItemFlag.ItemIsSelectable, True)
 
@@ -110,6 +112,15 @@ class BaseVisualNode(QGraphicsObject):
         self.next = None
         self.children = []
 
+    def hoverEnterEvent(self, event):
+        self.color = QColor("yellow")
+        self.update()
+
+    def hoverLeaveEvent(self, event):
+        self.color = QColor("cyan")
+        self.update()
+
+    
     def set_marker(self, text: str):
        # marker setuff
         self.side_label.setPlainText(text)
@@ -119,7 +130,7 @@ class BaseVisualNode(QGraphicsObject):
         return QRectF(0, 0, self.width, self.height)
 
     def paint(self, painter: QPainter, option, widget=None):
-        painter.setBrush(QBrush(Qt.GlobalColor.cyan))
+        painter.setBrush(QBrush(self.color))
         painter.setPen(QPen(Qt.GlobalColor.black, 2))
         painter.drawEllipse(self.boundingRect())
             

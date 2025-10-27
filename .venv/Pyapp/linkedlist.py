@@ -105,3 +105,6 @@ class LinkedList:
         val = self.head.data
         self.head = self.head.next
         return val
+    
+    def __str__(self):
+        return str(self.head.data)

@@ -18,9 +18,10 @@ class MainWindow(QWidget):
         self.setWindowTitle("Recursion + LinkedList + Stack")
         self.setGeometry(100, 100, 800, 600)
         self.setStyleSheet("""
-                           background-color: #201b4b;
-                           color: white;
-                           border-radius: 8px;
+                            background-color: #201b4b;
+                            border-radius: 8px;
+                            color: white;
+                            
                         """)
         
         self.stateLayout = QHBoxLayout()
@@ -58,9 +59,6 @@ class MainWindow(QWidget):
         self.section_container_A = QWidget()
         self.section_container_A.hide()
         self.section_container_A.setStyleSheet("""
-                                                QLabel {
-                                                   color: white;
-                                                }
                                                 QLineEdit {
                                                     background-color: #5c4db3;
                                                     color: white;
@@ -72,6 +70,13 @@ class MainWindow(QWidget):
                                                     color: white;
                                                     padding: 8px 16px;
                                                     border-radius: 8px;
+                                                    font-weight: bold
+                                                }
+                                                QPushButton::hover {
+                                                    background-color: #4c4494;
+                                                }
+                                                QPushButton::pressed {
+                                                    background-color: #3a2a73;
                                                 }
                                                 """)
         self.linkedlist_layout = QVBoxLayout(self.section_container_A)
@@ -79,9 +84,7 @@ class MainWindow(QWidget):
         self.section_container_B = QWidget()
         self.section_container_B.hide()
         self.section_container_B.setStyleSheet("""
-                                                QLabel {
-                                                   color: white;
-                                                }
+                                              
                                                 QLineEdit {
                                                     background-color: #5c4db3;
                                                     color: white;
@@ -93,6 +96,12 @@ class MainWindow(QWidget):
                                                     color: white;
                                                     padding: 8px 16px;
                                                     border-radius: 8px;
+                                                }
+                                                QPushButton::hover {
+                                                    background-color: #4c4494;
+                                                }
+                                                QPushButton::pressed {
+                                                    background-color: #3a2a73;
                                                 }
                                                 """)
         self.stackA_buttons = [
@@ -104,9 +113,6 @@ class MainWindow(QWidget):
         self.section_container_C = QWidget()
         self.section_container_C.hide()
         self.section_container_C.setStyleSheet("""
-                                                QLabel {
-                                                   color: white;
-                                                }
                                                 QLineEdit {
                                                     background-color: #5c4db3;
                                                     color: white;
@@ -119,6 +125,12 @@ class MainWindow(QWidget):
                                                     padding: 8px 16px;
                                                     border-radius: 8px;
                                                 }
+                                                QPushButton::hover {
+                                                    background-color: #4c4494;
+                                                }
+                                                QPushButton::pressed {
+                                                    background-color: #3a2a73;
+                                                }
                                                 """)
         self.sbl_buttons = [
             QPushButton("Push(List)"),
@@ -129,9 +141,6 @@ class MainWindow(QWidget):
         self.section_container_D = QWidget()
         self.section_container_D.hide()
         self.section_container_D.setStyleSheet("""
-                                                QLabel {
-                                                   color: white;
-                                                }
                                                 QTextEdit {
                                                     background-color: #5c4db3;
                                                     color: white;
@@ -143,6 +152,12 @@ class MainWindow(QWidget):
                                                     color: white;
                                                     padding: 8px 16px;
                                                     border-radius: 8px;
+                                                }
+                                                QPushButton::hover {
+                                                    background-color: #4c4494;
+                                                }
+                                                QPushButton::pressed {
+                                                    background-color: #3a2a73;
                                                 }
                                                 """)
         
@@ -154,9 +169,6 @@ class MainWindow(QWidget):
         self.section_container_E = QWidget()
         self.section_container_E.hide()
         self.section_container_E.setStyleSheet("""
-                                                QLabel {
-                                                   color: white;
-                                                }
                                                 QTextEdit {
                                                     background-color: #5c4db3;
                                                     color: white;
@@ -169,6 +181,12 @@ class MainWindow(QWidget):
                                                     padding: 8px 16px;
                                                     border-radius: 8px;
                                                 }
+                                                QPushButton::hover {
+                                                    background-color: #4c4494;
+                                                }
+                                                QPushButton::pressed {
+                                                    background-color: #3a2a73;
+                                                }
                                                 """)
         self.VMax_layout = QVBoxLayout(self.section_container_E)
         self.iterstack = []
@@ -177,9 +195,6 @@ class MainWindow(QWidget):
         self.uSection = QWidget()
         self.uSection.hide()
         self.uSection.setStyleSheet("""
-                                        QLabel {
-                                            color: white;
-                                        }
                                         QLineEdit {
                                             background-color: #5c4db3;
                                             color: white;
@@ -192,6 +207,12 @@ class MainWindow(QWidget):
                                             padding: 8px 16px;
                                             border-radius: 8px;
                                         }
+                                        QPushButton::hover {
+                                                    background-color: #4c4494;
+                                                }
+                                                QPushButton::pressed {
+                                                    background-color: #3a2a73;
+                                                }
                                         """)
         self.uLayout = QVBoxLayout(self.uSection)
         self.uLineTextEdit = QLineEdit("3")
@@ -207,43 +228,17 @@ class MainWindow(QWidget):
             self.uLayout.addWidget(button)
         
         self.uInputSection = QWidget()
-        self.uInputSection.hide()
+        # self.uInputSection.hide()
         self.uInputSection.setStyleSheet("""
-                                            QLabel {
-                                                color: white;
-                                            }
-                                            QTextEdit {x
-                                                background-color: #5c4db3;
-                                                color: white;
-                                                border-radius: 8px;
-                                                padding: 4px;
-                                            }
-                                            QPushButton {
-                                                background-color: #5451f0;
-                                                color: white;
-                                                padding: 8px 16px;
-                                                border-radius: 8px;
-                                            }
-                                            """)
+                                            background-color: #3c30a3;                             
+                                        """)
         self.uILayout = QVBoxLayout(self.uInputSection)
-        self.tailButtons = [
-            QPushButton("Run Tail Recursion"),
-            QPushButton("Run Head Recursion"),
-            QPushButton("Clear Visualization")
-        ]
-        self.uILayout.addWidget(QLabel("Tail Recursion Controls"), alignment=Qt.AlignmentFlag.AlignCenter)
-        self.recursionCount = QLineEdit()
-        self.recursionCount.setValidator(QIntValidator(0, 100, self))
-        self.recursionCount.setStyleSheet("""
-                                    background-color: #3c30a3;
-                                    color: white;
-                                    border-radius: 8
-                                    """)
-        self.uILayout.addWidget(self.recursionCount)
-        for button in self.tailButtons:
-            self.uILayout.addWidget(button)
-            
-        
+        self.uILayout.addWidget(QLabel("Data"), alignment=Qt.AlignmentFlag.AlignCenter)
+        self.datas = self.linkedlist.getList()
+        self.table = QTextEdit()
+        self.table.setReadOnly(True)
+       
+        self.uILayout.addWidget(self.table)
         self.initUI()
 
 
@@ -287,8 +282,6 @@ class MainWindow(QWidget):
             else:
                 self.linkedlist.prepend(val)
             self._update_log_and_visual_for_linkedlist(self.scene)
-
-        
 
         # ---------------- LinkedList Operations ---------------- #
         linkedlist_label = QLabel("LinkedList Operation:")
@@ -471,6 +464,7 @@ class MainWindow(QWidget):
         # show and hide sections
         def toggle_linkedlist_ui():
             self.scene.clear()
+           
             # show linkedlist ui
             show_section(self.section_container_A)
             print("linkedlist")
@@ -488,12 +482,19 @@ class MainWindow(QWidget):
             print("stack linkedlist")
         
         def toggle_Recursion_ui():
+            self.uInputSection.hide()
             self.scene.clear()
             print("addad")
             show_section(self.uSection)
         
         def show_section(section):
+          
+            if not self.uInputSection.isVisible():  #chage this ##################################################################################
+                self.uInputSection.show()
+            else:
+                self.uInputSection.hide()
             # Hide all
+            self.table.clear()
             self.section_container_A.hide()
             self.section_container_B.hide()
             self.section_container_C.hide()
@@ -554,6 +555,10 @@ class MainWindow(QWidget):
         nodeRender = NodeRenderer(scene)
         nodeRender.setData(node_data)
         nodeRender.linked_render()
+        #set the table for linkendlist value and address
+        self.table.clear()
+        for val in node_data:
+            self.table.append(f"Value: [{val}]     Address : {hex(id(val))}")
         
     def _update_log_and_visual_for_stack(self, scene):
         self.log_area.append(f"Stack: [ {self.stack} ]")
@@ -561,6 +566,10 @@ class MainWindow(QWidget):
         nodeRender = NodeRenderer(scene)
         nodeRender.setData(node_data)
         nodeRender.stack_render()
+        
+        self.table.clear()
+        for val in node_data:
+            self.table.append(f"Value: [{val}]      Address : {hex(id(val))}")
     
     def _update_log_and_visual_for_stack_linkedlist(self, scene):
         self.log_area.append(f"Stack built on LinkedList: [ {self.stack_on_linkedlist} ]")
@@ -568,6 +577,9 @@ class MainWindow(QWidget):
         nodeRender = NodeRenderer(scene)
         nodeRender.setData(node_data)
         nodeRender.stack_Linkedlist_render()
+        self.table.clear()
+        for val in node_data:
+            self.table.append(f"Value: [{val}]      Address : {hex(id(val))}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
