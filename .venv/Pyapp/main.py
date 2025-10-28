@@ -227,11 +227,26 @@ class MainWindow(QWidget):
         for button in self.recursion_buttons:
             self.uLayout.addWidget(button)
         
+        
+        self.dataButton = QPushButton("=")
+        self.dataButton.setStyleSheet("""
+                                        QPushButton {
+                                            background-color: #5451f0;
+                                            color: white;
+                                            padding: 4px;
+                                        }
+                                        QPushButton::hover {
+                                            background-color: #4c4494;
+                                        }
+                                        QPushButton::pressed {
+                                            background-color: #3a2a73;
+                                        }  
+                                      """)
         self.uInputSection = QWidget()
-        # self.uInputSection.hide()
+        self.uInputSection.hide()
         self.uInputSection.setStyleSheet("""
-                                            background-color: #3c30a3;                             
-                                        """)
+                                         background-color: #3c30a3;                            
+                                            """)
         self.uILayout = QVBoxLayout(self.uInputSection)
         self.uILayout.addWidget(QLabel("Data"), alignment=Qt.AlignmentFlag.AlignCenter)
         self.datas = self.linkedlist.getList()
@@ -453,7 +468,9 @@ class MainWindow(QWidget):
         view = GraphicsView(self.scene)
         view.setStyleSheet("background-color: #3c30a3;")
         view_area_layout.addWidget(view, 2)
+        view_area_layout.addWidget(self.dataButton )
         view_area_layout.addWidget(self.uInputSection, 1)
+        view_area_layout.addStretch()
 
         self.log_area.setReadOnly(True)
         self.log_area.setPlaceholderText("Log messages will appear here...")
@@ -489,10 +506,7 @@ class MainWindow(QWidget):
         
         def show_section(section):
           
-            if not self.uInputSection.isVisible():  #chage this ##################################################################################
-                self.uInputSection.show()
-            else:
-                self.uInputSection.hide()
+           
             # Hide all
             self.table.clear()
             self.section_container_A.hide()
@@ -502,10 +516,6 @@ class MainWindow(QWidget):
 
             # Show the one requested
             section.show()
-        
-        
-         
-
         
         for b in self.stateButtons:
             b.setStyleSheet("""
@@ -518,13 +528,18 @@ class MainWindow(QWidget):
                             """)
             self.stateLayout.addWidget(b)
         
-        
+        def _toggle_dButton():
+            if not self.uInputSection.isVisible():  #chage this ##################################################################################
+                self.uInputSection.show()
+            else:
+                self.uInputSection.hide()
        
             
         self.stateButtons[0].clicked.connect(toggle_linkedlist_ui)
         self.stateButtons[1].clicked.connect(toggle_stack_ui)
         self.stateButtons[2].clicked.connect(toggle_stacklinkedlist_ui)
         self.stateButtons[3].clicked.connect(toggle_Recursion_ui)
+        self.dataButton.clicked.connect(_toggle_dButton)
         
        
         
@@ -555,6 +570,7 @@ class MainWindow(QWidget):
         nodeRender = NodeRenderer(scene)
         nodeRender.setData(node_data)
         nodeRender.linked_render()
+        
         #set the table for linkendlist value and address
         self.table.clear()
         for val in node_data:

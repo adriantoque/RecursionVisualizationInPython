@@ -314,7 +314,7 @@ class NodeRenderer():
             if prev is not None:
                 start = prev.pos() + QPointF(prev.boundingRect().width() / 2, 0)  # top center of previous
                 end   = n.pos()   + QPointF(n.boundingRect().width() / 2, n.boundingRect().height())  # bottom center of current
-                add_up_arrow(self.scene, start, end)
+                add_down_arrow(self.scene, end, start)
 
             # Move Y upward for next node
             cY -= n.boundingRect().height() + spacing

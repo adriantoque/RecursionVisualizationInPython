@@ -16,15 +16,18 @@ class LinkedList:
         if not self.head:   # if list is empty
             self.head = new_node
             return
+        
         last = self.head
         while last.next:    # traverse to the last node
             last = last.next
-        last.next = new_node
+            
+        last.next = new_node # new node
 
     # Insert at the beginning
     def prepend(self, data):
         new_node = Node(data)
         new_node.next = self.head
+        
         self.head = new_node
 
     # Print the linked list
@@ -64,33 +67,10 @@ class LinkedList:
         self.head = None
 
 
-
-    # Recursive traversal (collect values)
-    def recursive_traverse(self):
-        # func inside a func
-        def _traverse(node): # this do the recursive
-            if not node:
-                return []
-            return [node.data] + _traverse(node.next)
-        return _traverse(self.head)
-
-    # Iterative traversal using a stack
-    def iterative_traverse_stack(self):
-        if not self.head:
-            return []
-        stack = []
-        result = []
-        stack.append(self.head)
-        while stack:
-            node = stack.pop()
-            result.append(node.data)
-            if node.next:
-                stack.append(node.next)
-        return result
-
     # Recursive reverse
     def recursive_reverse(self):
-        def _reverse(node, prev=None):
+        
+        def _reverse(node, prev=None):# helper
             if not node:
                 return prev
             nxt = node.next

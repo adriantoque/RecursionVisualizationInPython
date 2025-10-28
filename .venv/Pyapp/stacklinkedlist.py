@@ -20,6 +20,7 @@ class StackLinkedlist:
         if self.is_empty():
             raise IndexError("Pop from empty stack")
         popped = self.top.data
+        
         self.top = self.top.next
         self._size -= 1
         return popped
